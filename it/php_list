@@ -1,1 +1,30 @@
     PHP语言list语句
+    PHP中有一个list语句，很好用，比如：
+    list($a, $b, $c) = array('123', '456', '789');
+    则结果为：
+    $a : 123, $b : 456, $c : 789
+    如果一个函数返回一个数组
+    array($v1, $v2, $v3...)，
+    用list可以进行很方便的赋值操作，这有点像Go语言中函数的多值返回。
+    函数返回多个值在web开发中很常见，比如我现在在做的一个项目，API接口的返回值基本上都是
+    array('status' =>0, 'msg' => 'ok', 'data' => array(...))
+    的形式。
+    举个简单的例子，有一个API是取一本书的信息，代码是这样的：
+    $ret = getBookInfo($bookid);
+    if ($ret['status'] != 0) {
+        die($ret['msg']);
+    }
+    $bookinfo = $ret['data'];
+    ...
+    这是很常见的一段代码，使用getBookInfo这个API时，API的调用者和开发者要约定好，即函数第1，2，3个参数必须是status, msg, data。否则调用者得仔细一点去查手册。有些API的开发者习惯用error代替status来表示函数返回状态，那么调用者又需要在status和error这两个下标之间纠结一番才能正确调用。
+    试想，如果统一约定API的返回值不使用下标，而是按这种形式返回：
+    array($status, $msg, $data)
+    API调用起来就方便很多。
+    上面那段取书信息的代码可以改写成：
+    list($status, $msg, $bookinfo) = getBookInfo($bookid);
+    if ($status != 0) {
+        die($msg);
+    }
+    // 处理bookinfo
+    ...
+    这样一来，就少了很多下标的限制，在可读性上也好了很多。
