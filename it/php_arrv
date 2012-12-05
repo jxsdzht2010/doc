@@ -29,4 +29,25 @@ function POST($key = '', $v = '') {
     有这几个函数，上面两行代码可以简化为：
     $id     = GET('id', 0);
     $page   = GET('page', 1);
-    而且在命名上，GET和$_GET相似，所以不难记住。小小的函数可简化许多繁琐的操作。
+    而且在命名上，GET和$_GET相似，所以不难记住，一个很短的函数可简化许多繁琐的操作。
+    下面来说说ARRV这个函数，假如有一个数组
+    【ARRV函数】
+    $arr = array('a' => 1)
+    如果取它不存在的key值，比如 $v = $arr['b']，这样取值是不安全的，可能会导致程序不正常，报NOTICE错误，于是，采用一种安全的取值法：
+    $v = isset($arr['b']) ? $arr['b'] : 0;
+    当代码中出现很多需要采用类似三元表达式的语句时，就可用一个ARRV函数替代，如：
+    $a = isset($arr['a']) ? $arr['a'] : 0;
+    $b = isset($arr['b']) ? $arr['b'] : 0;
+    $c = isset($arr['c']) ? $arr['c'] : 0;
+    $d = isset($arr['d']) ? $arr['d'] : 0;
+    用ARRV函数代替之后就简单很多：
+    $a = ARRV($arr, 'a', 0);
+    $b = ARRV($arr, 'b', 0);
+    $c = ARRV($arr, 'c', 0);
+    $d = ARRV($arr, 'd', 0);
+    可以继续简化：
+    foreach(array('a', 'b', 'c', 'd') as $v) {
+        $$v = ARRV($arr, $v, 0);
+    }
+    这样写，冗余代码便少了许多。
+    
