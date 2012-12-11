@@ -50,4 +50,37 @@ function POST($key = '', $v = '') {
         $$v = ARRV($arr, $v, 0);
     }
     这样写，冗余代码便少了许多。
+    【ARRV函数与链式表达式】
+    如果有一个API返回的是一个数组，我们需要用到这个数组中的一个值，比如$userinfo的结构是这样的：
+    array(
+        'uid'   => 100,
+        'name'  => 'jim',
+        'age'   => 20
+    )
+    要取其中name的值，然后进行其他操作，则我们需要写如下代码：
+    $userinfo = getUserInfo($uid);
+    $name = !empty($userinfo) ? $userinfo['name'] : '';
+    $age = !empty($userinfo) ? $userinfo['age'] : 0;
+    $str = '他的名字叫%s, 他今年%s岁';
+    $str = sprintf($str, $name, $age);
+    
+    采用ARRV函数可以将多种操作链接起来，代码可用如下方式：
+    $userinfo = getUserInfo($uid);
+    $str = '他的名字叫%s, 他今年%s岁';
+    $str = sprintf($str, ARRV($userinfo,'name',''), ARRV($userinfo, 'age', 0));
+    这样一来可以将几行代码融为一行，减少视觉复杂性。
+    某一天，我发现ARRV可以作为函数内部参数使用时，偶然自问：这种方法减少代码行数的本质原因是什么？答案就是ARRV函数将数组和值链接到了一起，于是乎想起大学刚毕业的时候，看过的一个C语言面试题：
+    1.写一个 char *strcpy(char *dest, char *src); 
+    2.该函数为什么返回一个char类型指针？
+    strcpy函数写起来不难，第二个问题我是看了答案才知道，返回一个char类型的指针有利于形成“链式表达式”。即可以将strcpy这个函数作为其他函数的参数直接使用，而不需采用多行代码，比如：
+    int len = strlen(strcpy(dest, src));
+    如果strcpy返回的不是char类型，而是int，那么上述代码只能这样写：
+    strcpy(dest, src);
+    int len = strlen(dest);
+    如此一来就要多写一行了。
+    ARRV函数起的作用也就是，它可以形成链式表达式。在javascript中，链式写法就更常见了，
+    obj.toString().trim().replace('abc', '').length;
+    这种写法带来的好处是非常巨大的。
+    PHP中，很常见的函数返回类型，比如false, 0, array()等，其实背后都有微妙的不同，非常值得琢磨一番。
+    
     
