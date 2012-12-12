@@ -1,31 +1,30 @@
     【GET与POST】
     在开发过程中，经常遇到下面这样的代码：
-    [code]
     $id     = isset($_GET['id']) ? intval($_GET['id']) : 0;
     $page   = isset($_GET['page']) ? intval($_GET['page']) : 1;
     ...
     诸如此类的安全检查代码，没难度，写起来却费事。某天我采用一个通用的办法处理之类操作，写了一个函数ARRV，具体实现很简单，几行代码便可。
     
-/**
- * 取$_GET, $_POST的值
- */
-function ARRV($arr = array(), $key = '', $v = '') {
-    if (!is_array($arr)) {
-    	return $v;
+    /**
+     * 取$_GET, $_POST的值
+     */
+    function ARRV($arr = array(), $key = '', $v = '') {
+        if (!is_array($arr)) {
+    	    return $v;
+        }
+        if (!isset($arr[$key])) {
+    	    return $v;
+        }
+        return $arr[$key];
     }
-    if (!isset($arr[$key])) {
-    	return $v;
+
+    function GET($key = '', $v = '') {
+        return ARRV($_GET, $key, $v);
     }
-    return $arr[$key];
-}
 
-function GET($key = '', $v = '') {
-    return ARRV($_GET, $key, $v);
-}
-
-function POST($key = '', $v = '') {
-    return ARRV($_POST, $key, $v);
-}
+    function POST($key = '', $v = '') {
+        return ARRV($_POST, $key, $v);
+    }
     有这几个函数，上面两行代码可以简化为：
     $id     = GET('id', 0);
     $page   = GET('page', 1);
