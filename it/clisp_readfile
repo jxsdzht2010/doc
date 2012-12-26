@@ -1,0 +1,2 @@
+(setq ifile (open '/home/orange/doc :if-does-not-exist nil))
+(setq line (read-line ifile nil))
