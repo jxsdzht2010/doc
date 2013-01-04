@@ -1,0 +1,1 @@
+curl 中传递多维数组需要用http_build_query函数将数值转换
