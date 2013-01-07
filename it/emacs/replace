@@ -1,0 +1,12 @@
+emacs 格式化代码会经常用到下面的操作
+#对齐
+代码：
+    uid = 1;
+    nickname = 'emacs';
+    system = 'linux';
+选取代码，执行下面指令
+M-x align-regexp RET = RET
+结果：
+    uid      = 1;
+    nickname = 'emacs';
+    system   = 'linux';
