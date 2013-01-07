@@ -1,0 +1,38 @@
+    PHP间接调用函数
+    有一个用户，信息为：
+    $user = array(
+        'uid' => 10,
+        'height' => 180,
+        'weight' => 60,
+        'salary' => 2,
+        'house' => '1'
+    );
+    这是在数据库中存储的数据，将其展示到页面上，要经过事先转换，比如：
+        height转换为180cm，
+        weight转换为60kg，
+        salary的取值范围是1：5000元以下, 2：5000-10000元, 3：10000元以上
+        house的取值范围是1：已经购房，2：暂未购房
+    对于新手可能会将取值范围硬编码在函数和html代码之中，比如写成这样：
+        $arr_salary = array('1' => '5000元以下', '2' => '5000-10000元', '3' => '10000元以上');
+        $arr_house = array('1' => '已经购房', '2' => '暂未购房');
+        $user['height'] = $user['height'] . 'Cm';
+        $user['weight'] = $user['weight'] . 'Kg';
+        $user['salary'] = $arr_salary[$user['salary']];
+        $user['house'] = $arr_house[$user['house']];
+    这样的代码会占用多行位置，影响代码整体外观效果，比较好的做法是将数值转换做成一个Helper，专门处理用户的属性转换逻辑。
+    比如写一个class UserHelper，它包含几个height，weight，salary，house等4个helper函数,分别用于处理用户对应的属性。
+
+    $user['height'] = UserHelper::height($user['height']);
+    这样属性初始范围与转换逻辑便可放到专门的一个class中处理。
+    注意到$user的key值与UserHelper的function name是一样的，所以可以用如下一个循环，便可处理$user中所有的转换：
+        foreach ($user as $key => $val) {
+            $user[$key] = UserHelper::$key($val);
+        }
+    但是$user中的uid属性没有对应的helper function，而且每一次转换要写一个foreach显得有些多余，我们可以在UserHelper中提供一个对外接口trans，专门处理$user数组。如此以来一行代码便可起到转换作用：
+        $user = UserHelper::trans($user);
+    在UserHelper::trans中再判断$user::$key是不是一个存在的函数，PHP已经提供了这样的功能：get_class_methods，利用这个函数可以过滤掉那些不许要转换的$key。
+    完整代码见<a href="https://github.com/einsteiner123/functions/blob/master/trans.php">UserHelper</a>，class把相同的逻辑抽象成 arr_trans函数，这是一个小技巧。在初始化html模板选项的时候，也可以采用这个UserHelper里面的数据，参数给INIT即可得到完整的取值范围。
+    
+    
+        
+      
