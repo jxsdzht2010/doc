@@ -1,0 +1,14 @@
+ C++编程知识积累
+ 1.用宏简化多个函数定义
+    int func1(int a, int b, int c, int d);
+    int func2(int a, int b, int c, int d);
+    int func3(int a, int b, int c, int d);
+    这三个函数的申明，除函数名之外，其他部分形式相同。如果在一个头文件之中存在大量这样的函数，有经验的程序员会用一个宏来简化函数的定义。
+    #define F( func )                            \
+        int func(int a, int b, int c, int d);
+    函数的定义可以简化为
+    F( func1 )
+    F( func2 )
+    F( func3 )
+    在g++编译器下，这种写法可以通过编译。在某些版本的gcc编译器中，可能会编译不过。
+    
