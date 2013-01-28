@@ -1,0 +1,9 @@
+    strcpy
+    《C程序设计语言》一书中讲述了strcpy这个函数的实现，共给出了4个实现方式，各有不同，精益求精。
+    第一种采用数组方式
+    void strcpy(char *s, char *t) {
+        int i;
+        while ((s[i] = t[i]) != '\0') {
+            i++;
+        }
+    }
